@@ -10,6 +10,14 @@ public class NotifikacijeCreateDTO {
     private Date datumSlanja;
     private TipNotifikacijeDTO tipNotifikacije;
 
+    public NotifikacijeCreateDTO(String message, long korisnikId, String email, Date datumSlanja, TipNotifikacijeDTO tipNotifikacije) {
+        this.message = message;
+        this.korisnikId = korisnikId;
+        this.email = email;
+        this.datumSlanja = datumSlanja;
+        this.tipNotifikacije = tipNotifikacije;
+    }
+
     public String getMessage() {
         return message;
     }

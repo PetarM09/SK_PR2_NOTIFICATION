@@ -3,7 +3,9 @@ package example.mapper;
 import example.domain.TipNotifikacije;
 import example.dto.TipNotifikacijeDTO;
 import example.repository.TipNotifikacijeRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TipNotifikacijeMapper {
     private TipNotifikacijeRepository tipNotifikacijeRepository;
 

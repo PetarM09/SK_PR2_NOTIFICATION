@@ -4,7 +4,9 @@ import example.domain.Notifikacija;
 import example.dto.NotifikacijaDTO;
 import example.dto.NotifikacijeCreateDTO;
 import org.aspectj.weaver.ast.Not;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NotifikacijaMapper {
 
     private TipNotifikacijeMapper tipNotifikacijeMapper;

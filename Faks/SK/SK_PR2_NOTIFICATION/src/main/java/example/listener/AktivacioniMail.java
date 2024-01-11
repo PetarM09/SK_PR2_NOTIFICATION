@@ -6,6 +6,7 @@ import example.helper.MessageHelper;
 import example.service.impl.EmailServiceImpl;
 import example.service.NotifikacijaService;
 import example.service.TipNotifikacijeService;
+import javassist.NotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
@@ -33,5 +34,30 @@ public class AktivacioniMail {
         this.emailService = emailService;
         this.userServiceApiClient = userServiceApiClient;
         this.tipNotifikacijeService = tipNotifikacijeService;
+    }
+
+    @JmsListener(destination = "${destination.createNotification}", concurrency = "5-10")
+    public void addNotifAndSendMail(Message message) throws JMSException, IllegalAccessException, NotFoundException {
+        AktivacioniMailDTO aktivacioniMailDTO = messageHelper.getMessage(message, AktivacioniMailDTO.class);
+        System.out.println("Nova notifikacia");
+
+        Long userId = aktivacioniMailDTO.getUserId();
+        String userEmail = aktivacioniMailDTO.getUserEmail();
+        System.out.println(userId);
+
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/client/" + userId, HttpMethod.GET,
+                null, KorisniciDto.class);
+
+
+        TipNotifikacijeDTO tipNotifikacijeDTO = tipNotifikacijeService.getTipoviNotifikacije(aktivacioniMailDTO.getTipNotifikacije());
+        MailTekstFormater mailTekstFormater = new MailTekstFormater();
+        String mailMsg = mailTekstFormater.formatirajTekst(tipNotifikacijeDTO.getMessage(), aktivacioniMailDTO);
+
+        emailService.sendSimpleMessage(korisnikDto.getBody().getEmail(), "ACTIVATION_EMAIL", mailMsg);
+
+        NotifikacijeCreateDTO notifikacijeCreateDTO =
+                new NotifikacijeCreateDTO(mailMsg,userId,userEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO("ACTIVATION_EMAIL"));
+        notifikacijaService.dodajNotifikaciju(notifikacijeCreateDTO);
+
     }
 }

@@ -10,6 +10,13 @@ public class TipNotifikacijeDTO {
         return id;
     }
 
+    public TipNotifikacijeDTO() {
+    }
+
+    public TipNotifikacijeDTO(String type) {
+    	this.type = type;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
