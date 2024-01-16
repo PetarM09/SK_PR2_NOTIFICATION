@@ -34,4 +34,11 @@ public class TipNotifikacijeServiceImpl implements TipNotifikacijeService {
                 .orElseThrow(() -> new NotFoundException(String.format("Notifikacija tipa: %tip nije pronadjena.", tip)));
     }
 
+    @Override
+    public TipNotifikacijeDTO getTipNotifikacije(Long id) {
+        return tipNotifikacijeRepository.findById(id)
+                .map(tipNotifikacijeMapper::tipNotifikacijetoTipNotifikacijeDTO)
+                .orElseThrow(() -> new RuntimeException("Tip notifikacije nije pronadjen."));
+    }
+
 }

@@ -12,6 +12,6 @@ public interface NotifikacijaRepository extends JpaRepository<Notifikacija,Long>
 
     List<Notifikacija> findNotifikacijaByKorisnikId(Long id);
 
-    @Query(value = "SELECT * FROM SK_NOTIFICATION.notifikacije", nativeQuery = true)
+    @Query(value = "SELECT * FROM SK_NOTIFICATION.notifikacija", nativeQuery = true)
     List<Notifikacija> getAllNotifikacije();
 }

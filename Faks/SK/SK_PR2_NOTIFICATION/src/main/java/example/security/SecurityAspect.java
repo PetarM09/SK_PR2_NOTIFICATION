@@ -35,6 +35,8 @@ public class SecurityAspect {
         //Check for authorization parameter
         String token = null;
         for (int i = 0; i < methodSignature.getParameterNames().length; i++) {
+            System.out.println(methodSignature.getParameterNames()[i]);
+            System.out.println(joinPoint.getArgs()[i]);
             if (methodSignature.getParameterNames()[i].equals("authorization")) {
                 //Check bearer schema
                 if (joinPoint.getArgs()[i].toString().startsWith("Bearer")) {
@@ -43,6 +45,7 @@ public class SecurityAspect {
                 }
             }
         }
+        System.out.println("token: " + token);
         //If token is not presents return UNAUTHORIZED response
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -55,7 +58,7 @@ public class SecurityAspect {
         }
         //Check user role and proceed if user has appropriate role for specified route
         CheckSecurity checkSecurity = method.getAnnotation(CheckSecurity.class);
-        String role = claims.get("role", String.class);
+        String role = claims.get("tip_korisnika", String.class);
         if (Arrays.asList(checkSecurity.roles()).contains(role)) {
             return joinPoint.proceed();
         }

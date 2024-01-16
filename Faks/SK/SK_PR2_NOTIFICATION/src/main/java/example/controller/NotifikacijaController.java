@@ -28,15 +28,16 @@ public class NotifikacijaController {
         return new ResponseEntity<>(notifikacijaService.dodajNotifikaciju(notifikacijeCreateDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/getNotificationsForClientId")
-    public ResponseEntity<List<NotifikacijaDTO>> getNotificationsForClientId(@RequestHeader String authorization) {
-        Long id = tokenService.parseId(authorization);
+    @GetMapping("/getNotificationsForClientId/{id}")
+    public ResponseEntity<List<NotifikacijaDTO>> getNotificationsForClientId(@PathVariable Long id) {
         return new ResponseEntity<>(notifikacijaService.getSveKorisniceNotifikacije(id), HttpStatus.OK);
     }
 
     @GetMapping("/getAllNotifications")
     @CheckSecurity(roles = {"ADMIN"})
     public ResponseEntity<List<NotifikacijaDTO>> getAllNotifications(@RequestHeader("Authorization") String authorization) {
+        System.out.println("usao u get all notifications");
+        System.out.println(notifikacijaService.getSveNotifikacije());
         return new ResponseEntity<>(notifikacijaService.getSveNotifikacije(), HttpStatus.OK);
     }
 }

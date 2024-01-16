@@ -7,4 +7,6 @@ public interface TipNotifikacijeService {
     TipNotifikacijeDTO dodajTipNotifikacije(TipNotifikacijeDTO notificationTypeDto);
 
     TipNotifikacijeDTO getTipoviNotifikacije(String type) throws NotFoundException;
+
+    TipNotifikacijeDTO getTipNotifikacije(Long id);
 }
