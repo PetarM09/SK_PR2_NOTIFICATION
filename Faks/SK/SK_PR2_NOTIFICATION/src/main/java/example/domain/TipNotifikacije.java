@@ -11,7 +11,7 @@ public class TipNotifikacije {
     private Long id;
 
     private String type;
-    private String message;
+    private String embeded_msg;
 
     public Long getId() {
         return id;
@@ -30,10 +30,10 @@ public class TipNotifikacije {
     }
 
     public String getMessage() {
-        return message;
+        return embeded_msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessage(String embeded_msg) {
+        this.embeded_msg = embeded_msg;
     }
 }

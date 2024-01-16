@@ -26,7 +26,9 @@ public class MessageHelper {
 
     public <T> T getMessage(Message message, Class<T> clazz) throws RuntimeException, JMSException {
         try {
+            System.out.println(message);
             String json = ((TextMessage) message).getText();
+            System.out.println(json);
             T data = objectMapper.readValue(json, clazz);
 
             Set<ConstraintViolation<T>> violations = validator.validate(data);

@@ -41,23 +41,22 @@ public class AktivacioniMail {
         AktivacioniMailDTO aktivacioniMailDTO = messageHelper.getMessage(message, AktivacioniMailDTO.class);
         System.out.println("Nova notifikacia");
 
-        Long userId = aktivacioniMailDTO.getUserId();
-        String userEmail = aktivacioniMailDTO.getUserEmail();
-        System.out.println(userId);
+        Long userId = aktivacioniMailDTO.getId();
+        String userEmail = aktivacioniMailDTO.getEmail();
 
-        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/client/" + userId, HttpMethod.GET,
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/korisnici/" + userId.toString(), HttpMethod.GET,
                 null, KorisniciDto.class);
 
 
         TipNotifikacijeDTO tipNotifikacijeDTO = tipNotifikacijeService.getTipoviNotifikacije(aktivacioniMailDTO.getTipNotifikacije());
         MailTekstFormater mailTekstFormater = new MailTekstFormater();
+        System.out.println(tipNotifikacijeDTO.getMessage());
         String mailMsg = mailTekstFormater.formatirajTekst(tipNotifikacijeDTO.getMessage(), aktivacioniMailDTO);
 
-        emailService.sendSimpleMessage(korisnikDto.getBody().getEmail(), "ACTIVATION_EMAIL", mailMsg);
+        emailService.sendSimpleMessage(korisnikDto.getBody().getEmail(), "ACTIVATION_EMAIL", mailMsg + "\n" + aktivacioniMailDTO.getActivationLink());
 
         NotifikacijeCreateDTO notifikacijeCreateDTO =
                 new NotifikacijeCreateDTO(mailMsg,userId,userEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO("ACTIVATION_EMAIL"));
         notifikacijaService.dodajNotifikaciju(notifikacijeCreateDTO);
-
     }
 }

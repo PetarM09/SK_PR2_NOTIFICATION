@@ -1,28 +1,28 @@
 package example.dto;
 
 public class AktivacioniMailDTO {
-    private Long userId;
-    private String userEmail;
+    private Long id;
+    private String email;
     private String tipNotifikacije;
     private String ime;
     private String prezime;
-    private String aktivacioniLink;
-    private String aktivacioniKod;
+    private String activationLink;
+    private String activationCode;
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTipNotifikacije() {
@@ -49,19 +49,19 @@ public class AktivacioniMailDTO {
         this.prezime = prezime;
     }
 
-    public String getAktivacioniLink() {
-        return aktivacioniLink;
+    public String getActivationLink() {
+        return activationLink;
     }
 
-    public void setAktivacioniLink(String aktivacioniLink) {
-        this.aktivacioniLink = aktivacioniLink;
+    public void setActivationLink(String activationLink) {
+        this.activationLink = activationLink;
     }
 
-    public String getAktivacioniKod() {
-        return aktivacioniKod;
+    public String getActivationCode() {
+        return activationCode;
     }
 
-    public void setAktivacioniKod(String aktivacioniKod) {
-        this.aktivacioniKod = aktivacioniKod;
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 }
