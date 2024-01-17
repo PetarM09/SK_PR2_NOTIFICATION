@@ -46,7 +46,6 @@ public class ReminderNotificationListener {
 
         Long userId = reminderNotificationDto.getUserId();
 
-//REST template kontaktiranje drugog servisa
         ResponseEntity<KorisniciDto> clientDto = userServiceApiClient.exchange("/api/korisnici/" + userId, HttpMethod.GET,
                 null, KorisniciDto.class);
 
@@ -54,8 +53,6 @@ public class ReminderNotificationListener {
         TipNotifikacijeDTO tipNotifikacijeDTO = tipNotifikacijeService.getTipoviNotifikacije(reminderNotificationDto.getNotificationType());
         MailTekstFormater mailTextFormater = new MailTekstFormater();
         String mailMsg = mailTextFormater.formatirajTekst(tipNotifikacijeDTO.getMessage(), reminderNotificationDto);
-
-        //TODO ovo clientDto.getBody().getEmail() treba staviti umesto mog mock mejl-a
         emailService.sendSimpleMessage(clientDto.getBody().getEmail(), "REMINDER_EMAIL", mailMsg);
 
         NotifikacijeCreateDTO createNotificationDto =
