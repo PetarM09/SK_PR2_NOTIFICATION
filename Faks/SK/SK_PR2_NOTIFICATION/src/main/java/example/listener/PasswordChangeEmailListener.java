@@ -46,7 +46,7 @@ public class PasswordChangeEmailListener {
         Long userId = passwordChangedDto.getUserId();
 
         //REST template kontaktiranje drugog servisa
-        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/korisnici/" + userId, HttpMethod.GET,
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/api/korisnici/" + userId, HttpMethod.GET,
                 null, KorisniciDto.class);
 
 

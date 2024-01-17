@@ -44,7 +44,7 @@ public class AktivacioniMail {
         Long userId = aktivacioniMailDTO.getId();
         String userEmail = aktivacioniMailDTO.getEmail();
 
-        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/korisnici/" + userId.toString(), HttpMethod.GET,
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/api/korisnici/" + userId.toString(), HttpMethod.GET,
                 null, KorisniciDto.class);
 
 

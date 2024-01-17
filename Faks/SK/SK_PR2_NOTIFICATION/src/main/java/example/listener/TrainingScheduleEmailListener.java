@@ -28,29 +28,45 @@ public class TrainingScheduleEmailListener {
     private TipNotifikacijeService tipNotifikacijeService;
     private EmailServiceImpl emailService;
     private RestTemplate userServiceApiClient;
+    private RestTemplate gymServiceApiClient;
 
 
     public TrainingScheduleEmailListener(MessageHelper messageHelper, NotifikacijaService notifikacijaService,
-                           EmailServiceImpl emailService, RestTemplate userServiceApiClient, TipNotifikacijeService tipNotifikacijeService) {
+                                         EmailServiceImpl emailService, RestTemplate userServiceApiClient, TipNotifikacijeService tipNotifikacijeService, RestTemplate gymServiceApiClient) {
         this.messageHelper = messageHelper;
         this.notifikacijaService = notifikacijaService;
         this.emailService = emailService;
         this.userServiceApiClient = userServiceApiClient;
         this.tipNotifikacijeService = tipNotifikacijeService;
+        this.gymServiceApiClient = gymServiceApiClient;
     }
 
     @JmsListener(destination = "${destination.trainingScheduleNotification}", concurrency = "5-10")
-    void sendCarRentNotificationEmail(Message message) throws JMSException, IllegalAccessException, NotFoundException {
+    void sendScheduleNotificationEmail(Message message) throws JMSException, IllegalAccessException, NotFoundException {
         TrainingScheduleDto trainingScheduleDto = messageHelper.getMessage(message, TrainingScheduleDto.class);
         System.out.println("Zakazivanje treninga notifikacija");
         System.out.println(trainingScheduleDto.getTipNotifikacije());
 
         Long userId = trainingScheduleDto.getKorisnikId();
 
-        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/korisnici/" + userId , HttpMethod.GET,
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/api/korisnici/" + userId , HttpMethod.GET,
                 null, KorisniciDto.class);
+
+        String response = userServiceApiClient.exchange("/api/korisnici/getIdMenadzera/" + trainingScheduleDto.getNazivSale(), HttpMethod.GET, null, String.class).getBody();
+        assert response != null;
+        Integer managerID = Integer.parseInt(response);
+
+        ResponseEntity<KorisniciDto> managerDto = userServiceApiClient.exchange("/api/korisnici/" + managerID , HttpMethod.GET, null, KorisniciDto.class);
+
+        String managerEmail = managerDto.getBody().getEmail();
+        String managerFirstName = managerDto.getBody().getIme();
+        String managerLastName = managerDto.getBody().getPrezime();
+
+        trainingScheduleDto.setIme(managerFirstName);
+        trainingScheduleDto.setPrezime(managerLastName);
+
+
         String clientEmail = korisnikDto.getBody().getEmail();
-        //String managerEmail = managerDto.getBody().getEmail();
         String firstName = korisnikDto.getBody().getIme();
         String lastName = korisnikDto.getBody().getPrezime();
 
@@ -63,10 +79,15 @@ public class TrainingScheduleEmailListener {
         String type = trainingScheduleDto.getTipTreninga();
 
         emailService.sendSimpleMessage(clientEmail, type, mailMsg);
+        emailService.sendSimpleMessage(managerEmail, type, "Zakazan je trening za korisnika " + firstName + " " + lastName + " u sali " + trainingScheduleDto.getNazivSale() + " u ");
+
 
 
         NotifikacijeCreateDTO createNotificationDto =
                 new NotifikacijeCreateDTO(mailMsg,userId,clientEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO(trainingScheduleDto.getTipNotifikacije()));
         notifikacijaService.dodajNotifikaciju(createNotificationDto);
+
+        NotifikacijeCreateDTO create = new NotifikacijeCreateDTO("Zakazan je trening za korisnika " + firstName + " " + lastName + " u sali " + trainingScheduleDto.getNazivSale() + " u ",Long.valueOf(managerID),managerEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO(trainingScheduleDto.getTipNotifikacije()));
+        notifikacijaService.dodajNotifikaciju(create);
     }
 }

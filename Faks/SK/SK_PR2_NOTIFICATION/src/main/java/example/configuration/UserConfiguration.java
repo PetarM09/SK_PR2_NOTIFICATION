@@ -19,7 +19,15 @@ public class UserConfiguration {
     @Bean
     public RestTemplate userServiceApiClient() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080/api"));
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8084/users"));
+        restTemplate.setInterceptors(Collections.singletonList(new TokenInterceptor()));
+        return restTemplate;
+    }
+
+    @Bean
+    public RestTemplate gymServiceApiClient() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8084/gym"));
         restTemplate.setInterceptors(Collections.singletonList(new TokenInterceptor()));
         return restTemplate;
     }
