@@ -43,14 +43,16 @@ public class TrainingScheduleEmailListener {
     void sendCarRentNotificationEmail(Message message) throws JMSException, IllegalAccessException, NotFoundException {
         TrainingScheduleDto trainingScheduleDto = messageHelper.getMessage(message, TrainingScheduleDto.class);
         System.out.println("Zakazivanje treninga notifikacija");
+        System.out.println(trainingScheduleDto.getTipNotifikacije());
 
-        Long clientId = trainingScheduleDto.getKorisnikId();
+        Long userId = trainingScheduleDto.getKorisnikId();
 
-        ResponseEntity<KorisniciDto> clientDto = userServiceApiClient.exchange("/client/" + clientId, HttpMethod.GET, null, KorisniciDto.class);
-        String clientEmail = clientDto.getBody().getEmail();
+        ResponseEntity<KorisniciDto> korisnikDto = userServiceApiClient.exchange("/korisnici/" + userId , HttpMethod.GET,
+                null, KorisniciDto.class);
+        String clientEmail = korisnikDto.getBody().getEmail();
         //String managerEmail = managerDto.getBody().getEmail();
-        String firstName = clientDto.getBody().getIme();
-        String lastName = clientDto.getBody().getPrezime();
+        String firstName = korisnikDto.getBody().getIme();
+        String lastName = korisnikDto.getBody().getPrezime();
 
         trainingScheduleDto.setIme(firstName);
         trainingScheduleDto.setPrezime(lastName);
@@ -61,11 +63,10 @@ public class TrainingScheduleEmailListener {
         String type = trainingScheduleDto.getTipTreninga();
 
         emailService.sendSimpleMessage(clientEmail, type, mailMsg);
-        //emailService.sendSimpleMessage(managerEmail,type, "Info about client rent: "+mailMsg);
 
 
         NotifikacijeCreateDTO createNotificationDto =
-                new NotifikacijeCreateDTO(mailMsg,clientId,clientEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO(type));
+                new NotifikacijeCreateDTO(mailMsg,userId,clientEmail, Date.valueOf(LocalDate.now()),new TipNotifikacijeDTO(trainingScheduleDto.getTipNotifikacije()));
         notifikacijaService.dodajNotifikaciju(createNotificationDto);
     }
 }

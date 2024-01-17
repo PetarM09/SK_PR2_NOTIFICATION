@@ -47,7 +47,7 @@ public class ReminderNotificationListener {
         Long userId = reminderNotificationDto.getUserId();
 
 //REST template kontaktiranje drugog servisa
-        ResponseEntity<KorisniciDto> clientDto = userServiceApiClient.exchange("/client/" + userId, HttpMethod.GET,
+        ResponseEntity<KorisniciDto> clientDto = userServiceApiClient.exchange("/korisnici/" + userId, HttpMethod.GET,
                 null, KorisniciDto.class);
 
 

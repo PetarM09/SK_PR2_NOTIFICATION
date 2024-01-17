@@ -30,6 +30,7 @@ public class NotifikacijaServiceImpl implements NotifikacijaService {
     @Override
     public NotifikacijaDTO dodajNotifikaciju(NotifikacijeCreateDTO createNotificationDto) {
         String tipNotifikacijeName = createNotificationDto.getTipNotifikacije().getType();
+        System.out.println(tipNotifikacijeName);
         TipNotifikacije existingTipNotifikacije = tipNotifikacijeRepository.findNotificationTypeByType(tipNotifikacijeName).get();
         Notifikacija notifikacija = notifikacijaMapper.createNotifikacijaDTOToNotifikacije(createNotificationDto);
         notifikacija.setTipNotifikacije(existingTipNotifikacije);

@@ -64,4 +64,17 @@ public class TrainingScheduleDto {
     public void setBrojTermina(String brojTermina) {
         this.brojTermina = brojTermina;
     }
+
+    @Override
+    public String toString() {
+        return "TrainingScheduleDto{" +
+                "korisnikId=" + korisnikId +
+                ", tipNotifikacije='" + tipNotifikacije + '\'' +
+                ", ime='" + ime + '\'' +
+                ", prezime='" + prezime + '\'' +
+                ", tipTreninga='" + tipTreninga + '\'' +
+                ", grupaTreninga='" + grupaTreninga + '\'' +
+                ", brojTermina='" + brojTermina + '\'' +
+                '}';
+    }
 }
